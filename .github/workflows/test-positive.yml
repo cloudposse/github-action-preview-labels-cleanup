@@ -48,7 +48,7 @@ jobs:
       - uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: "${{ steps.context.outputs.changes }}"
-          number: ${{ toJson(steps.pr.outputs.result) }}
+          number: ${{ steps.pr.outputs.result }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
