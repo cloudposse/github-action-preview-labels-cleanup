@@ -100,8 +100,13 @@ jobs:
 
   teardown:
     runs-on: ubuntu-latest
-    needs: [assert]
+    needs: [setup, assert]
     if: ${{ always() }}
     steps:
       - name: Tear down
         run: echo "Do Tear down"
+
+      - uses: peter-murray/remove-labels-action@v1
+        with:
+          labels: ${{ needs.setup.outputs.label }}
+          issue_number: ${{ needs.setup.outputs.pr_number }}
