@@ -43,7 +43,7 @@ jobs:
         id: current
         with:
           labels_env: '{""}'
-          env: ${{ matrix.env }}
+          env: 'dev'
 
     outputs:
       result: "${{ steps.current.outputs.result1 }}"
