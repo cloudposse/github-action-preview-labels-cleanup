@@ -49,6 +49,7 @@ jobs:
         with:
           labels: "${{ steps.context.outputs.changes }}"
           number: ${{ steps.pr.outputs.result }}
+          issue_number: ${{ steps.pr.outputs.result }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
