@@ -1,4 +1,4 @@
-name: Test example positive
+name: Test labels remove
 on:
 #  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
 #  #
@@ -14,6 +14,46 @@ jobs:
       - name: Setup
         run: echo "Do setup"
 
+      - name: Context
+        id: context
+        shell: sh
+        run: |
+          echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"        
+
+#      - name: Update composer packages
+#        uses: technote-space/create-pr-action@v2
+#        with:
+#          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+#          EXECUTE_COMMANDS: |
+#            echo "${{ steps.context.outputs.label }}" >> README.md
+#          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
+#          COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
+#          COMMIT_EMAIL: 'example@example.com'
+#          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
+#          PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
+
+      - uses: actions/github-script@v6
+        id: pr
+        with:
+          script: |
+            const result = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: "${{ github.repository_owner }}:${{ github.ref_name }}"
+              }); 
+            
+            return result.data[0].number
+          result-encoding: string
+
+      - uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: "${{ steps.context.outputs.label }}"
+          number: ${{ steps.pr.outputs.result }}
+
+    outputs:
+      pr_number: ${{ steps.pr.outputs.result }}
+      label: ${{ steps.context.outputs.label }}
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -22,27 +62,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: snnaplab/get-labels-action@v1
+        id: labels
+        with:
+          number: ${{ needs.setup.outputs.pr_number }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          comparison: "contains"
+          expected: "${{ needs.setup.outputs.label }}"
+          actual: "${{ steps.labels.outputs.labels }}"
+
       - uses: ./
         id: current
         with:
-          param1: 'true'
+          labels_env: '{"dev": "${{ needs.setup.outputs.label }}"}'
+          env: "dev"
+          pr_number: ${{ needs.setup.outputs.pr_number }}
 
     outputs:
       result: "${{ steps.current.outputs.result1 }}"
 
   assert:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [setup, test]
     steps:
+      - uses: snnaplab/get-labels-action@v1
+        id: labels
+        with:
+          number: ${{ needs.setup.outputs.pr_number }}
+
       - uses: nick-fields/assert-action@v1
         with:
-          expected: 'true'
-          actual: "${{ needs.test.outputs.result }}"
+          comparison: "notContains"
+          expected: "${{ needs.setup.outputs.label }}"
+          actual: "${{ steps.labels.outputs.labels }}"
 
   teardown:
     runs-on: ubuntu-latest
-    needs: [assert]
+    needs: [setup, assert]
     if: ${{ always() }}
     steps:
       - name: Tear down
         run: echo "Do Tear down"
+
+      - uses: peter-murray/remove-labels-action@v1
+        with:
+          labels: ${{ needs.setup.outputs.label }}
+          issue_number: ${{ needs.setup.outputs.pr_number }}

@@ -1,23 +1,33 @@
-name: 'Example composite GitHub action'
-description: 'Example composite GitHub action'
+name: 'Preview environment controller labels cleanup'
+description: 'Remove deploy PR labels'
 author: hello@cloudposse.com
 branding:
-  icon: 'file'
+  icon: 'delete'
   color: 'white'
 inputs:
-  param1:
+  labels_env:
+    description: "JSON formatted {label}: {environment} map "
     required: true
-    description: "Input parameter placeholder"
-    default: "true"
-outputs:
-  result1:
-    description: "Output result placeholder"
-    value: "${{ steps.context.outputs.action-result }}"
+    default: "{}"
+  env:
+    description: Environment
+    required: true
+  pr_number:
+    description: The number of the pull request, which will default to extracting from the workflow event if not specified.
+    required: false
+outputs: {}
 runs:
   using: "composite"
   steps:
-    - id: context
-      shell: bash
-      run: |
-          echo "::set-output name=action-result::${{ inputs.param1 }}"
+    - uses: edwardgeorge/jq-action@main
+      id: label
+      with:
+        compact: true
+        raw-output: true
+        input: ${{ inputs.labels_env }}
+        script: ${{ format('.{0}', inputs.env) }}
 
+    - uses: peter-murray/remove-labels-action@v1
+      with:
+        labels: ${{ steps.label.outputs.output }}
+        issue_number: ${{ inputs.pr_number }}
