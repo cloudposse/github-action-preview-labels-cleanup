@@ -32,13 +32,23 @@ jobs:
 #          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
 #          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
 
-      - name: Brymastr/pr-info-action@v1
+      - uses: actions/github-script@v6
         id: pr
+        with:
+          script: |
+            const result = await octokit.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: ${{ github.repository_owner }}:${{ github.ref_name }}
+              }); 
+            
+            return result.data.number
+          result-encoding: string
 
       - uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: "${{ steps.context.outputs.changes }}"
-          number: ${{ toJSON(steps.pr.outputs.number) }}
+          number: ${{ toJson(steps.pr.outputs) }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
