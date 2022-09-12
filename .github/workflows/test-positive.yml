@@ -36,8 +36,7 @@ jobs:
         with:
           labels: |
             ${{ steps.context.outputs.changes }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
   test:
     runs-on: ubuntu-latest
