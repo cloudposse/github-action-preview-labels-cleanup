@@ -32,12 +32,12 @@ jobs:
 #          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
 #          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
 
-      - uses: christianvuerings/add-labels@v1
+      - uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: |
-            ${{ steps.context.outputs.changes }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+          labels: "${{ steps.context.outputs.changes }}"
+          number: ${{ github.event.pull_request.number }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
