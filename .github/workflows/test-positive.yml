@@ -20,17 +20,24 @@ jobs:
         run: |
           echo "::set-output name=changes::run-${{ github.run_id }}-${{ github.run_number }}"        
 
-      - name: Update composer packages
-        uses: technote-space/create-pr-action@v2
+#      - name: Update composer packages
+#        uses: technote-space/create-pr-action@v2
+#        with:
+#          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+#          EXECUTE_COMMANDS: |
+#            echo "${{ steps.context.outputs.changes }}" >> README.md
+#          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
+#          COMMIT_NAME: 'Test ${{ steps.context.outputs.changes }}'
+#          COMMIT_EMAIL: 'example@example.com'
+#          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
+#          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
+
+      - uses: christianvuerings/add-labels@v1
         with:
-          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
-          EXECUTE_COMMANDS: |
-            echo "${{ steps.context.outputs.changes }}" >> README.md
-          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
-          COMMIT_NAME: 'Test ${{ steps.context.outputs.changes }}'
-          COMMIT_EMAIL: 'example@example.com'
-          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
-          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
+          labels: |
+            ${{ steps.context.outputs.changes }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
@@ -40,11 +47,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: snnaplab/get-labels-action@v1
+        id: labels
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          comparison: "contains"
+          expected: "${{ steps.context.outputs.changes }}"
+          actual: "${{ steps.labels.outputs.labels }}"
+
       - uses: ./
         id: current
         with:
-          labels_env: '{""}'
-          env: 'dev'
+          labels_env: '{"${{ steps.context.outputs.changes }}": "dev"}'
+          env: "dev"
 
     outputs:
       result: "${{ steps.current.outputs.result1 }}"
@@ -53,10 +69,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
+      - uses: snnaplab/get-labels-action@v1
+        id: labels
+
       - uses: nick-fields/assert-action@v1
         with:
-          expected: 'true'
-          actual: "${{ needs.test.outputs.result }}"
+          comparison: "exact"
+          expected: ''
+          actual: "${{ steps.labels.outputs.labels }}"
 
   teardown:
     runs-on: ubuntu-latest
