@@ -3,11 +3,12 @@
 
 | Name | Description | Default | Required |
 |------|-------------|---------|----------|
-| param1 | Input parameter placeholder | true | true |
+| env | Environment | N/A | true |
+| labels\_env | JSON formatted {label}: {environment} map  | {} | true |
+| pr\_number | The number of the pull request, which will default to extracting from the workflow event if not specified. | N/A | false |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| result1 | Output result placeholder |
 <!-- markdownlint-restore -->
