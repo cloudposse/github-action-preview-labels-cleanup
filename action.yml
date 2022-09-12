@@ -12,6 +12,9 @@ inputs:
   env:
     description: Environment
     required: true
+  pr_number:
+    description: The number of the pull request, which will default to extracting from the workflow event if not specified.
+    required: false
 runs:
   using: "composite"
   steps:
@@ -26,3 +29,4 @@ runs:
     - uses: peter-murray/remove-labels-action@v1
       with:
         labels: ${{ steps.label.outputs.output }}
+        issue_number: ${{ inputs.pr_number }}

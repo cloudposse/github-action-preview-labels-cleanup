@@ -78,6 +78,7 @@ jobs:
         with:
           labels_env: '{"${{ steps.context.outputs.changes }}": "dev"}'
           env: "dev"
+          pr_number: ${{ needs.setup.outputs.pr_number }}
 
     outputs:
       result: "${{ steps.current.outputs.result1 }}"
