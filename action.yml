@@ -15,6 +15,7 @@ inputs:
   pr_number:
     description: The number of the pull request, which will default to extracting from the workflow event if not specified.
     required: false
+outputs: {}
 runs:
   using: "composite"
   steps:
