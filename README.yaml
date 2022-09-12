@@ -59,14 +59,28 @@ usage: |-
       context:
         runs-on: ubuntu-latest
         steps:
-          - name: Example action
-            uses: cloudposse/example-github-action-composite@main
-            id: example
+          - name: Preview deployments controller
+            uses: cloudposse/github-action-preview-environment-controller@v0.7.0
+            id: controller
             with:
-              param1: true
-  
+              labels: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+              open: ${{ github.event.pull_request.state == 'open' }}
+              env-label: |
+                preview: deploy
+    
         outputs:
-          result: ${{ steps.example.outputs.result1 }}
+          labels_env: ${{ steps.controller.outputs.labels_env }}
+  
+      destroy:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.pull_request.state != 'open' }}
+        needs: [ context ]
+        steps:      
+          - name: Cleanup label
+            uses: cloudposse/github-action-preview-labels-cleanup
+            with:
+              labels_env: ${{ needs.context.outputs.labels_env }}
+              env: preview
   ```
 
 include:
