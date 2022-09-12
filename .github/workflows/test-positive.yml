@@ -42,13 +42,13 @@ jobs:
                 head: "${{ github.repository_owner }}:${{ github.ref_name }}"
               }); 
             
-            return result.data.number
+            return result.data[0].number
           result-encoding: string
 
       - uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: "${{ steps.context.outputs.changes }}"
-          number: ${{ toJson(steps.pr.outputs) }}
+          number: ${{ toJson(steps.pr.outputs.result) }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
