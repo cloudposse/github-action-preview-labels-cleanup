@@ -36,8 +36,8 @@ jobs:
         with:
           labels: |
             ${{ steps.context.outputs.changes }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
