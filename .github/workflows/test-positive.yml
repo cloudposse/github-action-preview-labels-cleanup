@@ -14,6 +14,23 @@ jobs:
       - name: Setup
         run: echo "Do setup"
 
+      - name: Context
+        id: context
+        shell: sh
+        run: |
+          echo "::set-output name=changes::run-${{ github.run_id }}-${{ github.run_number }}"        
+
+      - name: Update composer packages
+        uses: technote-space/create-pr-action@v2
+        with:
+          EXECUTE_COMMANDS: |
+            echo "${{ steps.context.outputs.changes }}" >> README.md
+          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
+          COMMIT_NAME: 'Test ${{ steps.context.outputs.changes }}'
+          COMMIT_EMAIL: 'example@example.com'
+          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
+          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -25,7 +42,8 @@ jobs:
       - uses: ./
         id: current
         with:
-          param1: 'true'
+          labels_env: '{""}'
+          env: ${{ matrix.env }}
 
     outputs:
       result: "${{ steps.current.outputs.result1 }}"
