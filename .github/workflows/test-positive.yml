@@ -18,19 +18,19 @@ jobs:
         id: context
         shell: sh
         run: |
-          echo "::set-output name=changes::run-${{ github.run_id }}-${{ github.run_number }}"        
+          echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"        
 
 #      - name: Update composer packages
 #        uses: technote-space/create-pr-action@v2
 #        with:
 #          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
 #          EXECUTE_COMMANDS: |
-#            echo "${{ steps.context.outputs.changes }}" >> README.md
+#            echo "${{ steps.context.outputs.label }}" >> README.md
 #          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
-#          COMMIT_NAME: 'Test ${{ steps.context.outputs.changes }}'
+#          COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
 #          COMMIT_EMAIL: 'example@example.com'
 #          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
-#          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
+#          PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
 
       - uses: actions/github-script@v6
         id: pr
@@ -47,12 +47,13 @@ jobs:
 
       - uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: "${{ steps.context.outputs.changes }}"
+          labels: "${{ steps.context.outputs.label }}"
           number: ${{ steps.pr.outputs.result }}
           issue_number: ${{ steps.pr.outputs.result }}
 
     outputs:
       pr_number: ${{ steps.pr.outputs.result }}
+      label: ${{ steps.context.outputs.label }}
 
   test:
     runs-on: ubuntu-latest
@@ -70,7 +71,7 @@ jobs:
       - uses: nick-fields/assert-action@v1
         with:
           comparison: "contains"
-          expected: "${{ steps.context.outputs.changes }}"
+          expected: "${{ needs.context.outputs.label }}"
           actual: "${{ steps.labels.outputs.labels }}"
 
       - uses: ./
