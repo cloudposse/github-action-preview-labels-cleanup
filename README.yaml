@@ -5,7 +5,7 @@
 #
 
 # Name of this project
-name: example-github-action-composite
+name: github-action-preview-labels-cleanup
 
 # Tags of this project
 tags:
@@ -18,13 +18,13 @@ tags:
 license: "APACHE2"
 
 # Canonical GitHub repo
-github_repo: cloudposse/example-github-action-composite
+github_repo: cloudposse/github-action-preview-labels-cleanup
 
 # Badges to display
 badges:
   - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/example-github-action-composite.svg"
-    url: "https://github.com/cloudposse/example-github-action-composite/releases/latest"
+    image: "https://img.shields.io/github/release/cloudposse/github-action-preview-labels-cleanup.svg"
+    url: "https://github.com/cloudposse/github-action-preview-labels-cleanup/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
@@ -43,8 +43,8 @@ references:
     description: "Reusable workflows for different types of projects"
     url: "https://github.com/cloudposse/github-actions-workflows"
   - name: "example-github-action-release-workflow"
-    description: "Example application with complicated release workflow"
-    url: "https://github.com/cloudposse/example-github-action-release-workflow"
+    description: "Github action to manage deploy/undeploy for preview environments depends of PR labels"
+    url: "https://github.com/cloudposse/github-action-preview-environment-controller"
 
 # How to use this project
 usage: |-
