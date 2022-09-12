@@ -23,6 +23,7 @@ jobs:
       - name: Update composer packages
         uses: technote-space/create-pr-action@v2
         with:
+          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
           EXECUTE_COMMANDS: |
             echo "${{ steps.context.outputs.changes }}" >> README.md
           COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
