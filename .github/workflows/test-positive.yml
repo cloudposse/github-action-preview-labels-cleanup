@@ -32,10 +32,13 @@ jobs:
 #          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
 #          PR_TITLE: 'Test ${{ steps.context.outputs.changes }}'
 
+      - name: Brymastr/pr-info-action@v1
+        id: pr
+
       - uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: "${{ steps.context.outputs.changes }}"
-          number: ${{ toJSON(github) }}
+          number: ${{ toJSON(steps.pr.outputs.number) }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
 
