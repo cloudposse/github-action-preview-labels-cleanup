@@ -94,8 +94,8 @@ jobs:
 
       - uses: nick-fields/assert-action@v1
         with:
-          comparison: "exact"
-          expected: '[]'
+          comparison: "notContains"
+          expected: "${{ needs.setup.outputs.label }}"
           actual: "${{ steps.labels.outputs.labels }}"
 
   teardown:
