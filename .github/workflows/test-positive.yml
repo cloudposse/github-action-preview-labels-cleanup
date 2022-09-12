@@ -76,7 +76,7 @@ jobs:
       - uses: ./
         id: current
         with:
-          labels_env: '{"${{ steps.setup.outputs.label }}": "dev"}'
+          labels_env: '{"${{ needs.setup.outputs.label }}": "dev"}'
           env: "dev"
           pr_number: ${{ needs.setup.outputs.pr_number }}
 
