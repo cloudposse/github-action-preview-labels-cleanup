@@ -39,7 +39,7 @@ jobs:
             const result = await octokit.rest.pulls.list({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                head: ${{ github.repository_owner }}:${{ github.ref_name }}
+                head: "${{ github.repository_owner }}:${{ github.ref_name }}"
               }); 
             
             return result.data.number
