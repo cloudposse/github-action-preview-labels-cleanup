@@ -125,5 +125,5 @@ jobs:
             const result = await github.rest.git.deleteRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "${{ needs.setup.outputs.branch }}"
+              ref: "heads/${{ needs.setup.outputs.branch }}"
             }); 
