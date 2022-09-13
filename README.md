@@ -30,7 +30,7 @@
 
 -->
 
-Template repository of composite GitHub Action
+Remove labels used to control deployments with [github-action-preview-environment-controller](https://github.com/cloudposse/github-action-preview-environment-controller)
 
 ---
 
@@ -60,8 +60,8 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ## Introduction
 
-This is template repository to create composite GitHub Actions. 
-Feel free to use it as reference and starting point.
+On close a pull request we need to cleanup all labels  that specify a preview environments where the PR was deployed.
+This GitHub action integrates with [github-action-preview-environment-controller](https://github.com/cloudposse/github-action-preview-environment-controller) action
 
 
 
