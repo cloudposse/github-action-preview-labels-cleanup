@@ -122,7 +122,7 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         with:
           script: |
-            const result = await octokit.rest.git.deleteRef({
+            const result = await github.rest.git.deleteRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "refs/heads/${{ needs.setup.outputs.branch }}"
