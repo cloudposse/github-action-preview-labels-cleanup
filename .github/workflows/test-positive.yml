@@ -18,19 +18,27 @@ jobs:
         id: context
         shell: sh
         run: |
-          echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"        
-
-#      - name: Update composer packages
-#        uses: technote-space/create-pr-action@v2
-#        with:
-#          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
-#          EXECUTE_COMMANDS: |
-#            echo "${{ steps.context.outputs.label }}" >> README.md
-#          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
-#          COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
-#          COMMIT_EMAIL: 'example@example.com'
-#          PR_BRANCH_NAME: 'run-tests-${PR_ID}'
-#          PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
+          echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"
+          case "${{ github.ref_name }}" in
+            main)
+              echo "::set-output name=branch::run-${{ github.run_id }}-${{ github.run_number }}"          
+            ;;
+            *)
+              echo "::set-output name=branch::run-${{ github.ref_name }}"
+            ;;
+          esac
+      - name: Update composer packages
+        if: ${{ github.ref_name == "main" }}
+        uses: technote-space/create-pr-action@v2
+        with:
+          GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+          EXECUTE_COMMANDS: |
+            echo "${{ steps.context.outputs.label }}" >> README.md
+          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
+          COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
+          COMMIT_EMAIL: 'example@example.com'
+          PR_BRANCH_NAME: '${{ steps.context.outputs.changes }}'
+          PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
 
       - uses: actions/github-script@v6
         id: pr
@@ -39,7 +47,7 @@ jobs:
             const result = await github.rest.pulls.list({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                head: "${{ github.repository_owner }}:${{ github.ref_name }}"
+                head: "${{ github.repository_owner }}:${{ steps.context.outputs.branch }}"
               }); 
             
             return result.data[0].number
@@ -52,6 +60,7 @@ jobs:
 
     outputs:
       pr_number: ${{ steps.pr.outputs.result }}
+      branch: ${{ steps.context.outputs.branch }}
       label: ${{ steps.context.outputs.label }}
 
   test:
@@ -80,9 +89,6 @@ jobs:
           env: "dev"
           pr_number: ${{ needs.setup.outputs.pr_number }}
 
-    outputs:
-      result: "${{ steps.current.outputs.result1 }}"
-
   assert:
     runs-on: ubuntu-latest
     needs: [setup, test]
@@ -110,3 +116,13 @@ jobs:
         with:
           labels: ${{ needs.setup.outputs.label }}
           issue_number: ${{ needs.setup.outputs.pr_number }}
+
+      - uses: actions/github-script@v6
+        if: ${{ github.ref_name == "main" }}
+        with:
+          script: |
+            const result = await octokit.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/heads/${{ needs.setup.outputs.branch }}"
+            }); 
