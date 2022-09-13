@@ -21,12 +21,13 @@ jobs:
           echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"
           case "${{ github.ref_name }}" in
             main)
-              echo "::set-output name=branch::run-${{ github.run_id }}-${{ github.run_number }}"          
+              echo "::set-output name=branch::create-pr-action/run-${{ github.run_id }}-${{ github.run_number }}"          
             ;;
             *)
               echo "::set-output name=branch::${{ github.ref_name }}"
             ;;
           esac
+
       - name: Update composer packages
         if: ${{ github.ref_name == 'main' }}
         uses: technote-space/create-pr-action@v2
@@ -37,7 +38,7 @@ jobs:
           COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.label }}'
           COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
           COMMIT_EMAIL: 'example@example.com'
-          PR_BRANCH_NAME: '${{ steps.context.outputs.branch }}'
+          PR_BRANCH_NAME: '${{ steps.context.outputs.label }}'
           PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
 
       - uses: actions/github-script@v6
