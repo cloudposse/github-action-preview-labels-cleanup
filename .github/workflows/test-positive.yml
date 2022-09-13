@@ -24,7 +24,7 @@ jobs:
               echo "::set-output name=branch::run-${{ github.run_id }}-${{ github.run_number }}"          
             ;;
             *)
-              echo "::set-output name=branch::run-${{ github.ref_name }}"
+              echo "::set-output name=branch::${{ github.ref_name }}"
             ;;
           esac
       - name: Update composer packages
@@ -34,10 +34,10 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
           EXECUTE_COMMANDS: |
             echo "${{ steps.context.outputs.label }}" >> README.md
-          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.changes }}'
+          COMMIT_MESSAGE: 'Test ${{ steps.context.outputs.label }}'
           COMMIT_NAME: 'Test ${{ steps.context.outputs.label }}'
           COMMIT_EMAIL: 'example@example.com'
-          PR_BRANCH_NAME: '${{ steps.context.outputs.changes }}'
+          PR_BRANCH_NAME: '${{ steps.context.outputs.branch }}'
           PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
 
       - uses: actions/github-script@v6
