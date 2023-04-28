@@ -21,10 +21,10 @@ jobs:
           echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"
           case "${{ github.ref_name }}" in
             main)
-              echo "::set-output name=branch::create-pr-action/run-${{ github.run_id }}-${{ github.run_number }}"          
+              echo "branch=create-pr-action/run-${{ github.run_id }}-${{ github.run_number }}" >> $GITHUB_OUTPUT
             ;;
             *)
-              echo "::set-output name=branch::${{ github.ref_name }}"
+              echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
             ;;
           esac
 
