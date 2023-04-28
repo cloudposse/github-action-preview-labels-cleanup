@@ -18,7 +18,7 @@ jobs:
         id: context
         shell: sh
         run: |
-          echo "::set-output name=label::run-${{ github.run_id }}-${{ github.run_number }}"
+          echo "label=run-${{ github.run_id }}-${{ github.run_number }}" >> $GITHUB_OUTPUT
           case "${{ github.ref_name }}" in
             main)
               echo "branch=create-pr-action/run-${{ github.run_id }}-${{ github.run_number }}" >> $GITHUB_OUTPUT
