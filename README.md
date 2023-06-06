@@ -112,6 +112,7 @@ This GitHub action integrates with [github-action-preview-environment-controller
 
 
 <!-- markdownlint-disable -->
+
 ## Inputs
 
 | Name | Description | Default | Required |
@@ -119,6 +120,7 @@ This GitHub action integrates with [github-action-preview-environment-controller
 | env | Environment | N/A | true |
 | labels\_env | JSON formatted {label}: {environment} map  | {} | true |
 | pr\_number | The number of the pull request, which will default to extracting from the workflow event if not specified. | N/A | false |
+
 
 ## Outputs
 
@@ -221,7 +223,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
