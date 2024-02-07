@@ -77,7 +77,7 @@ jobs:
         with:
           number: ${{ needs.setup.outputs.pr_number }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           comparison: "contains"
           expected: "${{ needs.setup.outputs.label }}"
@@ -99,7 +99,7 @@ jobs:
         with:
           number: ${{ needs.setup.outputs.pr_number }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           comparison: "notContains"
           expected: "${{ needs.setup.outputs.label }}"
