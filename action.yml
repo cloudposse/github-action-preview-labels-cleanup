@@ -19,7 +19,7 @@ outputs: {}
 runs:
   using: "composite"
   steps:
-    - uses: edwardgeorge/jq-action@main
+    - uses: cloudposse/github-action-jq@0.4.0
       id: label
       with:
         compact: true
