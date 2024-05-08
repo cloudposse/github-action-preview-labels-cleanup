@@ -1,0 +1,7 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: github-action-preview-labels-cleanup
+  description: Remove labels used to control deployments with https://github.com/cloudposse/github-action-preview-environment-controller
+  homepage: https://cloudposse.com/accelerate
+  topics: github-action
