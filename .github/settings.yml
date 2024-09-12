@@ -5,3 +5,4 @@ repository:
   description: Remove labels used to control deployments with https://github.com/cloudposse/github-action-preview-environment-controller
   homepage: https://cloudposse.com/accelerate
   topics: github-action
+
