@@ -120,14 +120,19 @@ jobs:
             const prNumber = '${{ needs.setup.outputs.pr_number }}';
             console.log(`Label: ${label}, PR Number: ${prNumber}`);
 
-            const result = await github.rest.issues.removeLabel({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              name: label
-            });
-
-            console.log(`Result: ${result}`);
+            try {
+              const result = await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                name: label
+              });
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+              console.log(`Label ${label} was not found on PR #${prNumber}`);
+            }
 
       - uses: actions/github-script@v6
         if: ${{ github.ref_name == 'main' }}
