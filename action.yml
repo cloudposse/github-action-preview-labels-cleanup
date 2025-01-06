@@ -27,7 +27,28 @@ runs:
         input: ${{ inputs.labels_env }}
         script: ${{ format('.{0}', inputs.env) }}
 
-    - uses: peter-murray/remove-labels-action@v1
+    - uses: actions/github-script@v7
       with:
-        labels: ${{ steps.label.outputs.output }}
-        issue_number: ${{ inputs.pr_number }}
+        script: |
+          const label = '${{ steps.label.outputs.output }}';
+          const prNumber = '${{ inputs.pr_number }}';
+          
+          if (label) {
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                name: label
+              });
+              console.log(`Successfully removed label: ${label}`);
+            } catch (error) {
+              // Ignore 404 errors (label doesn't exist)
+              if (error.status !== 404) {
+                throw error;
+              }
+              console.log(`Label ${label} was not found on PR #${prNumber}`);
+            }
+          } else {
+            console.log('No label to remove');
+          }
