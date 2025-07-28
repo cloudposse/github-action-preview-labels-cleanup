@@ -41,7 +41,7 @@ jobs:
           PR_BRANCH_NAME: '${{ steps.context.outputs.label }}'
           PR_TITLE: 'Test ${{ steps.context.outputs.label }}'
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: pr
         with:
           script: |
@@ -134,7 +134,7 @@ jobs:
               console.log(`Label ${label} was not found on PR #${prNumber}`);
             }
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         if: ${{ github.ref_name == 'main' }}
         with:
           script: |
