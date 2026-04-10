@@ -27,7 +27,7 @@ runs:
         input: ${{ inputs.labels_env }}
         script: ${{ format('."{0}"', inputs.env) }}
 
-    - uses: actions/github-script@v7
+    - uses: actions/github-script@v9
       with:
         script: |
           const label = '${{ steps.label.outputs.output }}';
