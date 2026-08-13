@@ -19,7 +19,7 @@ outputs: {}
 runs:
   using: "composite"
   steps:
-    - uses: cloudposse/github-action-jq@0.4.0
+    - uses: cloudposse/github-action-jq@aff18a1f2e845b56fcfe995b01a558836dc2025b # v0.4.1
       id: label
       with:
         compact: true
@@ -27,7 +27,7 @@ runs:
         input: ${{ inputs.labels_env }}
         script: ${{ format('."{0}"', inputs.env) }}
 
-    - uses: actions/github-script@v7
+    - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       with:
         script: |
           const label = '${{ steps.label.outputs.output }}';
